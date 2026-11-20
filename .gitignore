@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secretos (URI de Atlas y clave JWT) ###
+.env
