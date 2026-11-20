@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "nombre": "Alimentos Perro",
+    "imagen": "/img/categorias/categoria-perro.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "Alimentos Gato",
+    "imagen": "/img/categorias/categoria-gatos.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "Juguetes y Accesorios",
+    "imagen": "/img/categorias/categoria-juguetes.jpg"
+  },
+  {
+    "id": 4,
+    "nombre": "Salud",
+    "imagen": "/img/categorias/categoria-salud.jpg"
+  }
+]

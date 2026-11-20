@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "nombre": "Admin",
+    "apellidos": "PawPets",
+    "correo": "admin@pawpets.cl",
+    "clave": "Admin123",
+    "rol": "admin",
+    "region": "Región Metropolitana de Santiago",
+    "comuna": "Puente Alto",
+    "calle": "Av. Concha y Toro 100"
+  },
+  {
+    "id": 2,
+    "nombre": "Camila",
+    "apellidos": "Rojas",
+    "correo": "camila@correo.cl",
+    "clave": "Cliente123",
+    "rol": "cliente",
+    "region": "Región Metropolitana de Santiago",
+    "comuna": "Maipú",
+    "calle": "Los Aromos 456"
+  },
+  {
+    "id": 3,
+    "nombre": "Valentina",
+    "apellidos": "Soto",
+    "correo": "vendedor@pawpets.cl",
+    "clave": "Vendedor123",
+    "rol": "vendedor",
+    "region": "Región Metropolitana de Santiago",
+    "comuna": "Santiago",
+    "calle": "Av. Matta 1200"
+  }
+]
