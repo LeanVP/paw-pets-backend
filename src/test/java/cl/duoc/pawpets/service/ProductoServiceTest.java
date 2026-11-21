@@ -14,7 +14,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,8 +24,12 @@ class ProductoServiceTest {
     ProductoRepository productos;
     @Mock
     CategoriaRepository categorias;
-    @InjectMocks
     ProductoService servicio;
+
+    @org.junit.jupiter.api.BeforeEach
+    void preparar() {
+        servicio = new ProductoService(productos, categorias, new SecuenciaEnMemoria());
+    }
 
     @Test
     @DisplayName("Crear asigna el siguiente id y valores por defecto")
