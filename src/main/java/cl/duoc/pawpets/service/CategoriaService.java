@@ -15,10 +15,13 @@ public class CategoriaService {
 
     private final CategoriaRepository repositorio;
     private final ProductoRepository productos;
+    private final SecuenciaService secuencias;
 
-    public CategoriaService(CategoriaRepository repositorio, ProductoRepository productos) {
+    public CategoriaService(CategoriaRepository repositorio, ProductoRepository productos,
+            SecuenciaService secuencias) {
         this.repositorio = repositorio;
         this.productos = productos;
+        this.secuencias = secuencias;
     }
 
     public List<Categoria> listar() {
@@ -31,7 +34,8 @@ public class CategoriaService {
     }
 
     public Categoria crear(Categoria datos) {
-        datos.setId(repositorio.findTopByOrderByIdDesc().map(c -> c.getId() + 1).orElse(1));
+        datos.setId(secuencias.siguiente("categorias",
+                () -> repositorio.findTopByOrderByIdDesc().map(Categoria::getId).orElse(0)));
         return repositorio.save(datos);
     }
 

@@ -14,7 +14,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,8 +24,12 @@ class CategoriaServiceTest {
     CategoriaRepository categorias;
     @Mock
     ProductoRepository productos;
-    @InjectMocks
     CategoriaService servicio;
+
+    @org.junit.jupiter.api.BeforeEach
+    void preparar() {
+        servicio = new CategoriaService(categorias, productos, new SecuenciaEnMemoria());
+    }
 
     @Test
     @DisplayName("No se puede eliminar una categoría con productos")
