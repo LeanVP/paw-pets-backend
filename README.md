@@ -26,7 +26,7 @@ desde `src/main/resources/data/*.json`.
 
 | Comando | Qué hace |
 |---|---|
-| `.\mvnw.cmd test` | 43 pruebas unitarias y de integración (JUnit 5 + Mockito + MockMvc, no necesitan MongoDB) |
+| `.\mvnw.cmd test` | 45 pruebas unitarias y de integración (JUnit 5 + Mockito + MockMvc, no necesitan MongoDB) |
 | `.\mvnw.cmd clean install` | Compila, prueba y genera el JAR en `target/` |
 
 ## Configuración (`.env`, nunca se sube a GitHub)
