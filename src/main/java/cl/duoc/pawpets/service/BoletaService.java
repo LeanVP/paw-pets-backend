@@ -32,10 +32,12 @@ public class BoletaService {
 
     private final BoletaRepository repositorio;
     private final ProductoRepository productos;
+    private final SecuenciaService secuencias;
 
-    public BoletaService(BoletaRepository repositorio, ProductoRepository productos) {
+    public BoletaService(BoletaRepository repositorio, ProductoRepository productos, SecuenciaService secuencias) {
         this.repositorio = repositorio;
         this.productos = productos;
+        this.secuencias = secuencias;
     }
 
     public Boleta crear(BoletaRequest datos, Integer clienteId) {
@@ -46,7 +48,6 @@ public class BoletaService {
         }
 
         List<DetalleBoleta> detalle = new ArrayList<>();
-        List<Producto> comprados = new ArrayList<>();
         int total = 0;
         for (Map.Entry<Integer, Integer> linea : cantidades.entrySet()) {
             Producto producto = productos.findById(linea.getKey())
@@ -64,14 +65,12 @@ public class BoletaService {
             d.setCantidad(cantidad);
             d.setSubtotal(producto.precioFinal() * cantidad);
             detalle.add(d);
-            comprados.add(producto);
             total += d.getSubtotal();
         }
 
         boolean aprobado = !MEDIO_RECHAZADO.equals(datos.medioPago());
 
         Boleta boleta = new Boleta();
-        boleta.setId(repositorio.findTopByOrderByIdDesc().map(b -> b.getId() + 1).orElse(1));
         boleta.setFecha(Instant.now());
         boleta.setClienteId(clienteId);
         boleta.setNombre(datos.nombre());
@@ -87,12 +86,35 @@ public class BoletaService {
         boleta.setEstado(aprobado ? Boleta.PAGADA : Boleta.RECHAZADA);
 
         // Solo una compra pagada descuenta stock.
-        if (aprobado) {
-            for (Producto producto : comprados) {
-                producto.setStock(producto.getStock() - cantidades.get(producto.getId()));
-            }
-            productos.saveAll(comprados);
+        if (!aprobado) {
+            return guardar(boleta);
         }
+        Map<Integer, Integer> descontados = new LinkedHashMap<>();
+        try {
+            for (DetalleBoleta d : detalle) {
+                // "Si stock >= cantidad, réstale cantidad" en UNA operación de MongoDB: si otro cliente
+                // compró las últimas unidades un instante antes, no se descuenta y se avisa.
+                if (!productos.descontarStock(d.getProductoId(), d.getCantidad())) {
+                    throw new ConflictoException("Stock insuficiente para " + d.getNombre()
+                            + ": otro cliente acaba de comprar las últimas unidades.");
+                }
+                descontados.put(d.getProductoId(), d.getCantidad());
+            }
+            return guardar(boleta);
+        } catch (RuntimeException e) {
+            // Compensación: si algo falla a mitad de camino, se devuelve el stock ya descontado
+            descontados.forEach(productos::devolverStock);
+            throw e;
+        }
+    }
+
+    /**
+     * Asigna el número de boleta recién al guardar (así una compra rechazada por stock no "gasta" un número)
+     * con el contador atómico: dos compras simultáneas nunca reciben el mismo número.
+     */
+    private Boleta guardar(Boleta boleta) {
+        boleta.setId(secuencias.siguiente("boletas",
+                () -> repositorio.findTopByOrderByIdDesc().map(Boleta::getId).orElse(0)));
         return repositorio.save(boleta);
     }
 
