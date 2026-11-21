@@ -32,7 +32,7 @@ class UsuarioServiceTest {
 
     @BeforeEach
     void preparar() {
-        servicio = new UsuarioService(usuarios, cifrador);
+        servicio = new UsuarioService(usuarios, cifrador, new SecuenciaEnMemoria());
     }
 
     @Test

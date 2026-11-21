@@ -18,10 +18,12 @@ public class UsuarioService {
 
     private final UsuarioRepository repositorio;
     private final PasswordEncoder cifrador;
+    private final SecuenciaService secuencias;
 
-    public UsuarioService(UsuarioRepository repositorio, PasswordEncoder cifrador) {
+    public UsuarioService(UsuarioRepository repositorio, PasswordEncoder cifrador, SecuenciaService secuencias) {
         this.repositorio = repositorio;
         this.cifrador = cifrador;
+        this.secuencias = secuencias;
     }
 
     public List<UsuarioResponse> listar() {
@@ -72,8 +74,10 @@ public class UsuarioService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("El usuario " + id + " no existe."));
     }
 
+    /** Id del próximo usuario, con el contador atómico (dos registros simultáneos nunca comparten id). */
     Integer siguienteId() {
-        return repositorio.findTopByOrderByIdDesc().map(u -> u.getId() + 1).orElse(1);
+        return secuencias.siguiente("usuarios",
+                () -> repositorio.findTopByOrderByIdDesc().map(Usuario::getId).orElse(0));
     }
 
     /** Valida el largo mínimo y devuelve el hash BCrypt. */

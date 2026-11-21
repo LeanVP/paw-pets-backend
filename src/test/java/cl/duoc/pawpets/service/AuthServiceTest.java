@@ -39,7 +39,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void preparar() {
-        servicio = new AuthService(usuarios, new UsuarioService(usuarios, cifrador), cifrador, jwt);
+        servicio = new AuthService(usuarios, new UsuarioService(usuarios, cifrador, new SecuenciaEnMemoria()), cifrador, jwt);
         when(jwt.generarToken(any(Usuario.class))).thenReturn("token-de-prueba");
     }
 
