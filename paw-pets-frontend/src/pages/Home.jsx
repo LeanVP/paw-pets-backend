@@ -53,19 +53,7 @@ export default function Home() {
         </EstadoCarga>
       </section>
 
-      {/* Video de YouTube de la tienda */}
-      <section className="mb-5">
-        <h2 className="section-title">Conoce a PawPets</h2>
-        {/* ratio ratio-16x9 de Bootstrap mantiene la forma del video en cualquier pantalla */}
-        {/* iframe muestra otra página (el reproductor de YouTube) dentro de la nuestra */}
-        <div className="ratio ratio-16x9">
-          <iframe
-            src="https://www.youtube.com/embed/j9O8SdXVGZQ"
-            title="Video institucional PawPets"
-            allowFullScreen
-          />
-        </div>
-      </section>
+    
 
       {/* Banner que invita a adoptar mascotas */}
       <section className="hero hero-adopcion text-center">
